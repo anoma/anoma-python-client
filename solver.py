@@ -20,6 +20,7 @@ class Solver:
         # if an intent was added, attempt a solve.
         if message["event"]["name"] == 'Elixir.Anoma.Node.Events.IntentAddSuccess':
             decoded_intent = base64.b64decode(message["event"]["intent"])
+
             self.unsolved.add(decoded_intent)
             self.solve()
         else:

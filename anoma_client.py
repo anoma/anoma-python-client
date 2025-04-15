@@ -136,7 +136,7 @@ class AnomaAPI:
         hints = [base64.b64decode(hint) for hint in response["io"]]
         return {"io": hints, "result": api_result}
 
-    def add_transaction(self, transaction: bytes) -> object:
+    def add_transaction(self, transaction: bytes, type: str) -> object:
         """
         I call the /mempool/add endpoint to add a transaction to the node's mempool.
         :param transaction: Jammed noun of a transaction.
@@ -144,7 +144,7 @@ class AnomaAPI:
                  `{'error': 'failed to add transaction', 'reason': 'invalid nock code'}` for a failed operation.
                  `{'message': 'transaction added'}` for a successful operation.
         """
-        payload = {"transaction": base64.b64encode(transaction).decode("utf-8")}
+        payload = {"transaction": base64.b64encode(transaction).decode("utf-8"), "transaction_type": type}
         api_result = self.__do_post("/mempool/add", payload)
         return api_result
 
