@@ -26,6 +26,7 @@ class AnomaAPI:
                 await self.handle_messages(self.websocket)
         except Exception as e:
             print(f"event stream connection error: {e}")
+            await self.connect_websocket()
 
     async def handle_messages(self, websocket):
         """
@@ -136,7 +137,7 @@ class AnomaAPI:
         hints = [base64.b64decode(hint) for hint in response["io"]]
         return {"io": hints, "result": api_result}
 
-    def add_transaction(self, transaction: bytes, type: str) -> object:
+    def add_transaction(self, transaction: bytes, type: str, wrap=False) -> object:
         """
         I call the /mempool/add endpoint to add a transaction to the node's mempool.
         :param transaction: Jammed noun of a transaction.
@@ -144,7 +145,7 @@ class AnomaAPI:
                  `{'error': 'failed to add transaction', 'reason': 'invalid nock code'}` for a failed operation.
                  `{'message': 'transaction added'}` for a successful operation.
         """
-        payload = {"transaction": base64.b64encode(transaction).decode("utf-8"), "transaction_type": type}
+        payload = {"transaction": base64.b64encode(transaction).decode("utf-8"), "transaction_type": type, "wrap": wrap}
         api_result = self.__do_post("/mempool/add", payload)
         return api_result
 
